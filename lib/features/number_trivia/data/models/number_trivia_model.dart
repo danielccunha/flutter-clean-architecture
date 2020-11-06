@@ -7,14 +7,14 @@ class NumberTriviaModel extends NumberTrivia {
     @required int number,
   }) : super(text: text, number: number);
 
-  factory NumberTriviaModel.fromJSON(Map<String, dynamic> json) {
+  factory NumberTriviaModel.fromJson(Map<String, dynamic> json) {
     return NumberTriviaModel(
       text: json['text'] as String,
       number: (json['number'] as num).toInt(),
     );
   }
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJson() {
     return {
       'text': text,
       'number': number,
