@@ -16,7 +16,7 @@ import 'features/number_trivia/data/datasources/number_trivia_local_data_source.
 final sl = GetIt.instance;
 
 // TODO: Try to use injectable
-void init() {
+Future init() async {
   // Features - Number Trivia
   // Bloc
   sl.registerFactory(
@@ -54,7 +54,8 @@ void init() {
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   // External
-  sl.registerLazySingletonAsync(() => SharedPreferences.getInstance());
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
 }
