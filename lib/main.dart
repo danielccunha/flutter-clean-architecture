@@ -1,7 +1,9 @@
+import 'package:flutter_clean_architecture/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
+  di.init();
 }
 
 class MyApp extends StatelessWidget {
