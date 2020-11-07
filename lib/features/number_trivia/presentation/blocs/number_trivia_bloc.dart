@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_clean_architecture/core/errors/failures.dart';
+import 'package:flutter_clean_architecture/core/usecases/usecase.dart';
 import 'package:flutter_clean_architecture/core/utils/input_converter.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
@@ -14,7 +16,7 @@ part 'number_trivia_state.dart';
 const SERVER_FAILURE_MESSAGE = 'Server Failure';
 const CACHE_FAILURE_MESSAGE = 'Cache Failure';
 const INVALID_INPUT_FAILURE_MESSAGE =
-    'Invalid Input - The number must be a positive integer or zero.';
+    'Invalid Input - The number must be a positive integer or zero';
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia getConcreteNumberTrivia;
@@ -42,8 +44,34 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         (_) async* {
           yield const Error(message: INVALID_INPUT_FAILURE_MESSAGE);
         },
-        (_) async* {},
+        (integer) async* {
+          yield const Loading();
+          final failureOrTrivia =
+              await getConcreteNumberTrivia(Params(number: integer));
+          yield failureOrTrivia.fold(
+            (failure) => Error(message: _mapFailureToMessage(failure)),
+            (trivia) => Loaded(trivia: trivia),
+          );
+        },
       );
+    } else if (event is GetTriviaForRandomNumber) {
+      yield const Loading();
+      final failureOrTrivia = await getRandomNumberTrivia(NoParams());
+      yield failureOrTrivia.fold(
+        (failure) => Error(message: _mapFailureToMessage(failure)),
+        (trivia) => Loaded(trivia: trivia),
+      );
+    }
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return SERVER_FAILURE_MESSAGE;
+      case CacheFailure:
+        return CACHE_FAILURE_MESSAGE;
+      default:
+        return 'Unexpected error';
     }
   }
 }
