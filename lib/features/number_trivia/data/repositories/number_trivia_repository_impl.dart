@@ -7,8 +7,10 @@ import 'package:flutter_clean_architecture/features/number_trivia/domain/entitie
 import 'package:flutter_clean_architecture/core/errors/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/domain/repositories/number_trivia_repository.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
+@LazySingleton(as: NumberTriviaRepository)
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
   final NumberTriviaLocalDataSource localDataSource;

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/presentation/blocs/number_trivia_bloc.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/presentation/widgets/trivia_controls.dart';
 import 'package:flutter_clean_architecture/features/number_trivia/presentation/widgets/widgets.dart';
-import 'package:flutter_clean_architecture/injection_container.dart';
+import 'package:flutter_clean_architecture/injection.dart';
 
 class NumberTriviaPage extends StatelessWidget {
   @override
@@ -18,7 +18,7 @@ class NumberTriviaPage extends StatelessWidget {
 
   BlocProvider<NumberTriviaBloc> buildBody(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<NumberTriviaBloc>(),
+      create: (_) => getIt<NumberTriviaBloc>(),
       child: ListView(
         padding: const EdgeInsets.all(10),
         children: [
